@@ -31,7 +31,7 @@ steps:
 - script: |
     set PYTHONPATH=src
     pip install pytest 
-    pytest -v -x tests/*.py --junitxml=/TestResults/test-results.xml
+    pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml
   displayName: 'pytest'
 
 - task: PublishTestResults@2
