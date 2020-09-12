@@ -6,61 +6,80 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-strategy:
-  matrix:
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
+jobs:
+- job:
+  displayName: 'Build and Run Tests'
+  
+  strategy:
+    matrix:
+      Python35:
+        python.version: '3.5'
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: 'Use Python $(python.version)'
 
 # - script: |
 #     python -m pip install --upgrade pip
 #     pip install -r requirements.txt
 #   displayName: 'Install dependencies'
 
-- script: |
-    pip install wheel
-    python3 setup.py bdist_wheel
-  displayName: 'Artifact creation'
+  - script: |
+      pip install wheel
+      python3 setup.py bdist_wheel
+    displayName: 'Artifact creation'
 
-- script: |
-    set PYTHONPATH=src
-    pip install pytest 
-    pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml
-  displayName: 'pytest'
+  - script: |
+      set PYTHONPATH=src
+      pip install pytest 
+      pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml
+    displayName: 'pytest'
 
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results **/test-*.xml'
-  inputs:
-    testRunner: JUnit
-    testResultsFiles: '**/test-*.xml'
-    failTaskOnFailedTests: true
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results **/test-*.xml'
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: '**/test-*.xml'
+      failTaskOnFailedTests: true
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: dist
-    targetFolder: $(Build.ArtifactStagingDirectory)
+- job:
+  displayName: 'Copy and Publish'
+  steps:
+  
+  - script: |
+      pip install wheel
+      python3 setup.py bdist_wheel
+    displayName: 'Create artefact for pushing to PyPi'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'dist'
-    publishLocation: 'Container'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.7'
+    displayName: 'Use Python 3.7'
 
-- script: |
-    pip install twine
-  displayName: 'Install twine'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: dist
+      targetFolder: $(Build.ArtifactStagingDirectory)
 
-- task: TwineAuthenticate@0
-  inputs:
-    externalFeeds: 'pypi_runeatest'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'dist'
+      publishLocation: 'Container'
+
+  - script: |
+      pip install twine
+    displayName: 'Install twine'
+
+  - task: TwineAuthenticate@0
+    inputs:
+      externalFeeds: 'pypi_runeatest'
+  
+  - script: |
+      python3 -m twine upload  --config-file $(PYPIRC_PATH) dist/*.whl
