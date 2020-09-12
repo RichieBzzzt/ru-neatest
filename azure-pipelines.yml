@@ -56,3 +56,11 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'dist'
     publishLocation: 'Container'
+
+- script: |
+    pip install twine
+  displayName: 'Install twine'
+
+- task: TwineAuthenticate@0
+  inputs:
+    externalFeeds: 'pypi_runeatest'
