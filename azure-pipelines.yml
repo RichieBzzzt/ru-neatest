@@ -35,9 +35,8 @@ steps:
   displayName: 'pytest'
 
 - task: PublishTestResults@2
-  displayName: 'Publish Test Results **/TEST-*.xml'
+  displayName: 'Publish Test Results **/test-*.xml'
   inputs:
     testRunner: JUnit
     testResultsFiles: '**/TEST-*.xml'
     failTaskOnFailedTests: true
-
