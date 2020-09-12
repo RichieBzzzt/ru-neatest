@@ -3,10 +3,10 @@ import os
 
 setup(
     # Application name:
-    name="ru-neatest",
+    name="runeatest",
 
     # Version number:
-    version="0.1",
+    version="0.7",
 
     # Application author details:
     author="Sabin IO",
@@ -22,7 +22,17 @@ setup(
     # Details
     url="https://github.com/RichieBzzzt/ru-neatest",
 
-    license="LICENSE",
     description="nunit test report generator to run in DataBricks",
+    long_description="Add test case results to an object and at the end of testing convert results to a string that looks like a Nunit results file and exit notebook with string.",
     keywords='azure, databricks, nunit',
+
+     classifiers=[
+    'Development Status :: 3 - Alpha',      
+    'Intended Audience :: Developers',      
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',     
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+  ],
 )
