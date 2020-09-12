@@ -29,7 +29,7 @@ steps:
 #   displayName: 'Install dependencies'
 
 - script: |
-    python setup.py bdist_wheel
+    python3 setup.py bdist_wheel
   displayName: 'Artifact creation'
 
 - script: |
