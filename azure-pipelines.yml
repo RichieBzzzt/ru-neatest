@@ -81,4 +81,4 @@ jobs:
       pythonUploadServiceConnection: 'pypi_runeatest'
   
   - script: |
-      python3 -m twine upload -r "pypi"  --config-file $(PYPIRC_PATH) dist/*.whl
+      python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
