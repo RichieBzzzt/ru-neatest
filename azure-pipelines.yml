@@ -52,17 +52,15 @@ jobs:
   dependsOn: 'BuildAndRunTests'
   displayName: 'Copy and Publish'
   steps:
-  
-  - script: |
-      pip install wheel
-      python3 setup.py bdist_wheel
-    displayName: 'Create artefact for pushing to PyPi'
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.7'
     displayName: 'Use Python 3.7'
 
+  - script: |
+      pip install wheel
+      python3 setup.py bdist_wheel
+    displayName: 'Create artefact for pushing to PyPi'
   - task: CopyFiles@2
     inputs:
       SourceFolder: dist
