@@ -82,3 +82,4 @@ jobs:
   
   - script: |
       python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
+    displayName: "Upload to Pypi"
