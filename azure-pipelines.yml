@@ -29,6 +29,10 @@ steps:
 #   displayName: 'Install dependencies'
 
 - script: |
+    python setup.py sdist
+  displayName: 'Artifact creation'
+
+- script: |
     set PYTHONPATH=src
     pip install pytest 
     pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml
@@ -40,3 +44,13 @@ steps:
     testRunner: JUnit
     testResultsFiles: '**/test-*.xml'
     failTaskOnFailedTests: true
+
+- task: CopyFiles@2
+  inputs:
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'dist'
+    publishLocation: 'Container'
