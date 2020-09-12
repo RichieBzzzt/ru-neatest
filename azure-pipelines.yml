@@ -38,5 +38,5 @@ steps:
   displayName: 'Publish Test Results **/test-*.xml'
   inputs:
     testRunner: JUnit
-    testResultsFiles: '**/TEST-*.xml'
+    testResultsFiles: '**/test-*.xml'
     failTaskOnFailedTests: true
