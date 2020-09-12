@@ -48,7 +48,7 @@ jobs:
       testResultsFiles: '**/test-*.xml'
       failTaskOnFailedTests: true
 
-- job:
+- job: 'CopyAndPublish'
   dependsOn: 'BuildAndRunTests'
   displayName: 'Copy and Publish'
   steps:
