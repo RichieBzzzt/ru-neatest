@@ -6,7 +6,7 @@ setup(
     name="runeatest",
 
     # Version number:
-    version="0.8",
+    version="0.11",
 
     # Application author details:
     author="Sabin IO",
@@ -20,7 +20,7 @@ setup(
     zip_safe=False,
 
     # Details
-    url="https://github.com/RichieBzzzt/ru-neatest",
+    url="https://github.com/RichieBzzzt/runeatest",
 
     description="nunit test report generator to run in DataBricks",
     long_description="Add test case results to an object and at the end of testing convert results to a string that looks like a Nunit results file and exit notebook with string.",
