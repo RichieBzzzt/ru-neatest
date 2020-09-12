@@ -7,7 +7,7 @@ trigger:
 - master
 
 jobs:
-- job:
+- job: 'BuildAndRunTests'
   displayName: 'Build and Run Tests'
   
   strategy:
@@ -49,6 +49,7 @@ jobs:
       failTaskOnFailedTests: true
 
 - job:
+  dependsOn: 'BuildAndRunTests'
   displayName: 'Copy and Publish'
   steps:
   
