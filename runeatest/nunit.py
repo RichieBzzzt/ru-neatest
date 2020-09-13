@@ -3,7 +3,7 @@ from runeatest import utils
 
 
 def get_nunit_header():
-    context = pyspark.getcontext()
+    context = pyspark.get_context()
     now = utils.get_date_and_time()
     print(now)
     now_date = now[0]

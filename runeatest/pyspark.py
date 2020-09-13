@@ -13,7 +13,7 @@ def get_dbutils(spark):
     return dbutils
 
 
-def getcontext():
+def get_context():
     dbutils = get_dbutils(spark)
     context = json.loads(
         dbutils.notebook.entry_point.getDbutils().notebook().getContext().toJson()
