@@ -6,7 +6,7 @@ setup(
     name="runeatest",
 
     # Version number:
-    version="0.15",
+    version="0.16",
 
     # Application author details:
     author="Sabin IO",
