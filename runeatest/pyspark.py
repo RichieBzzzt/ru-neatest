@@ -17,7 +17,8 @@ def get_dbutils(spark):
 def get_context():
     from pyspark.context import SparkContext
     from pyspark.sql.session import SparkSession
-    sc = SparkContext('local')
+
+    sc = SparkContext("local")
     spark = SparkSession(sc)
     dbutils = get_dbutils(spark)
     context = json.loads(
