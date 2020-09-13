@@ -32,12 +32,11 @@ jobs:
 
   - script: 
       pip install black
-      python3 -m black --check \runeatest \tests
     displayName: 'Install black format checker'
 
-  # - script: 
-  #     black --check \runeatest \tests
-  #   displayName: 'Run black format checker'
+  - script: 
+      black --check \runeatest \tests
+    displayName: 'Run black format checker'
 
   - script: |
       pip install wheel
