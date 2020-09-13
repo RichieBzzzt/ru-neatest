@@ -2,8 +2,7 @@ from runeatest import pyspark
 from runeatest import utils
 
 
-def get_nunit_header():
-    context = pyspark.get_context()
+def get_nunit_header(context):
     now = utils.get_date_and_time()
     print(now)
     now_date = now[0]
@@ -17,12 +16,29 @@ def get_nunit_header():
     return nunit_header
 
 
+def get_test_suite_results(results, context):
+    test_suite_result = "success"
+    test_suite_success = "True"
+    for result in results:
+        if result["result"] == "failure":
+            test_suite_result = "failure"
+            test_suite_success = "False"
+    test_suite = '<test-suite type="TestFixture" name="##name##" executed="True" result="##test_suite_result##" success="##test_suite_success##" time="0.000" asserts="0"><results>'
+    test_suite = (
+        test_suite.replace("##name##", context["extraContext"]["notebook_path"])
+        .replace("##test_suite_result##", test_suite_result)
+        .replace("##test_suite_success##", test_suite_success)
+    )
+    return test_suite
+
+
 def get_nunit_footer():
     nunit_footer = "</results>\n</test-suite>\n</test-results>"
     return nunit_footer
 
 
 def convert_to_nunit_results_format(testresults):
-    h = get_nunit_header()
+    context = pyspark.get_context()
+    h = get_nunit_header(context)
     f = get_nunit_footer()
     return h + f

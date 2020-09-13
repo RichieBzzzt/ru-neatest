@@ -1,8 +1,12 @@
-def addtestcase(name, issuccess):
-    return {"test": name, "issuccess": str(issuccess), "result": (getresult(issuccess))}
+def add_testcase(name, issuccess):
+    return {
+        "test": name,
+        "issuccess": str(issuccess),
+        "result": (get_result(issuccess)),
+    }
 
 
-def getresult(issuccess):
+def get_result(issuccess):
     if issuccess:
         return str("success")
     else:
