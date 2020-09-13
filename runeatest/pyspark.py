@@ -1,13 +1,15 @@
 import json
 import pyspark
+import IPython
 
 
 def get_dbutils(spark):
-    try:
+    dbutils = None
+    if spark.conf.get("spark.databricks.service.client.enabled") == "true":
         from pyspark.dbutils import DBUtils
 
         dbutils = DBUtils(spark)
-    except ImportError:
+    else:
         import IPython
 
         dbutils = IPython.get_ipython().user_ns["dbutils"]
@@ -15,11 +17,9 @@ def get_dbutils(spark):
 
 
 def get_context():
-
-    from pyspark.context import SparkContext
     from pyspark.sql.session import SparkSession
 
-    spark = SparkSession.builder.appName("runeatest").getOrCreate()
+    spark = SparkSession.builder.getOrCreate()
     dbutils = get_dbutils(spark)
     context = json.loads(
         dbutils.notebook.entry_point.getDbutils().notebook().getContext().toJson()
