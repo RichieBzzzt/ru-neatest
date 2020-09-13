@@ -15,11 +15,11 @@ def get_dbutils(spark):
 
 
 def get_context():
+
     from pyspark.context import SparkContext
     from pyspark.sql.session import SparkSession
 
-    sc = SparkContext("local")
-    spark = SparkSession(sc)
+    spark = SparkSession.builder.appName("runeatest").getOrCreate()
     dbutils = get_dbutils(spark)
     context = json.loads(
         dbutils.notebook.entry_point.getDbutils().notebook().getContext().toJson()
