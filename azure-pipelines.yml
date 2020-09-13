@@ -31,7 +31,7 @@ jobs:
 #   displayName: 'Install dependencies'
 
   - script: 
-      pip install wheel
+      pip install black
       black --check \runeatest \tests
     displayName: 'Run format checker'
 
