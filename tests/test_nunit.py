@@ -91,3 +91,52 @@ def test_get_test_suite_result_all_passed(mocker):
     expected = '<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="success" success="True" time="0.000" asserts="0"><results>'
     actual = nunit.get_test_suite_results(results, context)
     assert expected == actual
+
+
+def test_get_test_case_results_one_failure():
+    results = []
+    results.append(testreporter.add_testcase("test name", False))
+    expected = '<test-case name="test name" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+    actual = nunit.get_test_case_results(results)
+    assert expected == actual[0]
+
+
+def test_get_test_case_results_one_pass():
+    results = []
+    results.append(testreporter.add_testcase("test name", True))
+    expected = '<test-case name="test name" description="" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    actual = nunit.get_test_case_results(results)
+    assert expected == actual[0]
+
+
+def test_get_test_case_results_one_pass_one_fail():
+    results = []
+    results.append(testreporter.add_testcase("test name", True))
+    results.append(testreporter.add_testcase("test name 2", False))
+    expected0 = '<test-case name="test name" description="" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    expected1 = '<test-case name="test name 2" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+    actual = nunit.get_test_case_results(results)
+    assert expected0 == actual[0]
+    assert expected1 == actual[1]
+
+
+def test_get_test_case_results_all_pass():
+    results = []
+    results.append(testreporter.add_testcase("test name", True))
+    results.append(testreporter.add_testcase("test name 2", True))
+    expected0 = '<test-case name="test name" description="" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    expected1 = '<test-case name="test name 2" description="" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    actual = nunit.get_test_case_results(results)
+    assert expected0 == actual[0]
+    assert expected1 == actual[1]
+
+
+def test_get_test_case_results_all_fail():
+    results = []
+    results.append(testreporter.add_testcase("test name", False))
+    results.append(testreporter.add_testcase("test name 2", False))
+    expected0 = '<test-case name="test name" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+    expected1 = '<test-case name="test name 2" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+    actual = nunit.get_test_case_results(results)
+    assert expected0 == actual[0]
+    assert expected1 == actual[1]

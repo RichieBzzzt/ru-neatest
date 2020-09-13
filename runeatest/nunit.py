@@ -32,6 +32,23 @@ def get_test_suite_results(results, context):
     return test_suite
 
 
+def get_test_case_results(results):
+    test_cases = []
+    for result in results:
+        if result["result"] == "failure":
+            test_case_result = '<test-case name="##test##" description="" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+        elif result["result"] == "success":
+            test_case_result = '<test-case name="##test##" description="" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1"/>'
+        test_case_result = (
+            test_case_result.replace("##test##", result["test"])
+            .replace("##result##", result["result"])
+            .replace("##issuccess##", result["issuccess"])
+        )
+        test_cases.append(test_case_result)
+    print(test_cases)
+    return test_cases
+
+
 def get_nunit_footer():
     nunit_footer = "</results>\n</test-suite>\n</test-results>"
     return nunit_footer
@@ -40,5 +57,6 @@ def get_nunit_footer():
 def convert_to_nunit_results_format(testresults):
     context = pyspark.get_context()
     h = get_nunit_header(context)
+    s = get_test_suite_results(testresults, context)
     f = get_nunit_footer()
-    return h + f
+    return h + s + f
