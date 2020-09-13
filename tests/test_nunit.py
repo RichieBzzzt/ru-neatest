@@ -11,4 +11,3 @@ def test_get_nunit_header():
 def test_get_nunit_footer():
     expected = "</results>\n</test-suite>\n</test-results>"
     actual = nunit.get_nunit_footer()
-    assert expected == actual
