@@ -29,6 +29,10 @@ steps:
 #   displayName: 'Install dependencies'
 
 - script: |
+    black --check \runeatest \tests
+  displayName: 'Run format checker'
+
+- script: |
     python setup.py bdist_wheel
   displayName: 'Artifact creation'
 
