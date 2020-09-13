@@ -30,7 +30,7 @@ jobs:
 #     pip install -r requirements.txt
 #   displayName: 'Install dependencies'
 
-  - script: |
+  - script: 
       pip install wheel
       black --check \runeatest \tests
     displayName: 'Run format checker'
@@ -88,4 +88,3 @@ jobs:
   - script: |
       python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
     displayName: "Upload to Pypi"
->>>>>>> 675d2ecbf3a5754c8f495afa8ceb73fee812202f
