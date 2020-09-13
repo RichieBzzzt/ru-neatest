@@ -10,7 +10,7 @@ def get_nunit_header():
     now_time = now[1]
     nunit_header = '<test-results name="##name##" total="##total##" date="##getdate##" time="##gettime##">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="Microsoft Windows NT 6.1.7600.0" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="dummymachine" user="dummyuser" user-domain="dummy"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
     nunit_header = (
-        nunit_header.replace("##name##", context["notebook_path"])
+        nunit_header.replace("##name##", context["extraContext"]["notebook_path"])
         .replace("##getdate##", now_date)
         .replace("##gettime##", now_time)
     )
