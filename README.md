@@ -14,6 +14,7 @@ publish to testpypi.
 Setup a test notebook project that makes use of runeatest.
 How to setup a job to execute notebook with tests.
 Branching and branch policies/PR not sorted on the build.
+Sort out build number
 
 ## known unknowns
 How does this work with other types of jobs that can be run?
