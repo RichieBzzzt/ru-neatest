@@ -6,7 +6,7 @@ setup(
     name="runeatest",
 
     # Version number:
-    version="0.24",
+    version="0.26",
 
     # Application author details:
     author="Sabin IO",
@@ -30,7 +30,6 @@ setup(
     'Development Status :: 1 - Planning',      
     'Intended Audience :: Developers',      
     'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
   ],
