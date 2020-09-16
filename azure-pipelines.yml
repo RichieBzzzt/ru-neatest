@@ -65,11 +65,22 @@ jobs:
 - job: 'CopyAndPublish'
   dependsOn: 'BuildAndRunTests'
   displayName: 'Copy and Publish'
+  variables:
+  Version.Major: 0
+  Version.Minor: 0
+  Version.Revision: $[counter(variables['Version.Minor'], 0)]
+  
   steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.8'
     displayName: 'Use Python 3.8'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath' # Options: filePath, inline
+      scriptPath: $(Build.SourcesDirectory)/altersetup.py 
+      arguments: $(Version.Major) $(Version.Minor) $(Version.Revision) 
     
   - script: |
       python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
