@@ -72,7 +72,7 @@ jobs:
     displayName: 'Use Python 3.8'
 
   - script: 
-      black --check \runeatest \tests
+      python3 -m black --check \runeatest \tests
     displayName: 'Run black format checker'
 
   - script: |
