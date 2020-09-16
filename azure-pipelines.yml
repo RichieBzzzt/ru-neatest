@@ -36,8 +36,15 @@ jobs:
   - script: |
       set PYTHONPATH=src
       pip install pytest 
-      pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml
+      pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
     displayName: 'pytest'
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage'
+    condition: succeededOrFailed() 
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
 
   - task: PublishTestResults@2
     displayName: 'Publish Test Results **/test-*.xml'
@@ -83,9 +90,12 @@ jobs:
     displayName: 'Install twine'
 
   - task: TwineAuthenticate@1
+    displayName: 'Twine Authenticate'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     inputs:
       pythonUploadServiceConnection: 'pypi_runeatest'
   
   - script: |
       python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: "Upload to Pypi"
