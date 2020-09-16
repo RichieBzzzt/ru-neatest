@@ -63,7 +63,7 @@ jobs:
   displayName: 'Copy and Publish'
   variables:
     Version.Major: 0
-    Version.Minor: 1
+    Version.Minor: 27
     Version.Revision: $[counter(variables['Version.Minor'], 0)]
   
   steps:

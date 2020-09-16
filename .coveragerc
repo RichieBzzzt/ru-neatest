@@ -1,4 +1,4 @@
 [run]
 omit = 
     # omit setup files
-    setup.py,setup-tokenized.py,tests/*
+    setup.py,setup-tokenized.py,altersetup.py,setup-tokenised.py,tests/*
