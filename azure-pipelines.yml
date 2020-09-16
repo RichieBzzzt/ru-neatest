@@ -66,9 +66,9 @@ jobs:
   dependsOn: 'BuildAndRunTests'
   displayName: 'Copy and Publish'
   variables:
-  Version.Major: 0
-  Version.Minor: 0
-  Version.Revision: $[counter(variables['Version.Minor'], 0)]
+    Version.Major: 0
+    Version.Minor: 0
+    Version.Revision: $[counter(variables['Version.Minor'], 0)]
   
   steps:
   - task: UsePythonVersion@0
