@@ -70,6 +70,10 @@ jobs:
     inputs:
       versionSpec: '3.8'
     displayName: 'Use Python 3.8'
+    
+  - script: |
+      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
+    displayName: 'Install Tools'
 
   - script: 
       python3 -m black --check \runeatest \tests
