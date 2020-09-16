@@ -16,6 +16,8 @@ jobs:
         python.version: '3.6'
       Python37:
         python.version: '3.7'
+      Python38:
+        python.version: '3.8'
 
   steps:
   - task: UsePythonVersion@0
@@ -29,7 +31,7 @@ jobs:
     displayName: 'Install dependencies'
 
   - script: |
-      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mocker pytest-cov
+      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov
     displayName: 'Install Tools'
 
   # https://bandit.readthedocs.io/en/latest/index.html
@@ -66,8 +68,8 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.7'
-    displayName: 'Use Python 3.7'
+      versionSpec: '3.8'
+    displayName: 'Use Python 3.8'
 
   - script: 
       black --check \runeatest \tests
