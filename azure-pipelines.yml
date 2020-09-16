@@ -29,13 +29,20 @@ jobs:
     displayName: 'Install dependencies'
 
   - script: |
-      pip install wheel
+      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mocker pytest-cov
+    displayName: 'Install Tools'
+
+  # https://bandit.readthedocs.io/en/latest/index.html
+  - script: |
+      python -m bandit -r . -c bandit-config.yml -f xml -o test-results-bandit.xml
+    displayName: 'Run bandit' 
+
+  - script: |
       python3 setup.py bdist_wheel
     displayName: 'artefact creation'
 
   - script: |
       set PYTHONPATH=src
-      pip install pytest 
       pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
     displayName: 'pytest'
 
@@ -63,15 +70,10 @@ jobs:
     displayName: 'Use Python 3.7'
 
   - script: 
-      pip install black
-    displayName: 'Install black format checker'
-
-  - script: 
       black --check \runeatest \tests
     displayName: 'Run black format checker'
 
   - script: |
-      pip install wheel
       python3 setup.py bdist_wheel
     displayName: 'Create artefact for pushing to PyPi'
   - task: CopyFiles@2
@@ -84,10 +86,6 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'dist'
       publishLocation: 'Container'
-
-  - script: |
-      pip install twine
-    displayName: 'Install twine'
 
   - task: TwineAuthenticate@1
     displayName: 'Twine Authenticate'
