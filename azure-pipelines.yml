@@ -31,7 +31,7 @@ jobs:
     displayName: 'Install dependencies'
 
   - script: |
-      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov
+      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
     displayName: 'Install Tools'
 
   # https://bandit.readthedocs.io/en/latest/index.html
