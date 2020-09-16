@@ -9,7 +9,7 @@ setup(
     name="runeatest",
 
     # Version number:
-    version="0.0.2",
+    version="@@Major@@.@@Minor@@.@@Revision@@",
 
     # Application author details:
     author="Sabin IO",

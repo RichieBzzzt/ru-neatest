@@ -40,10 +40,6 @@ jobs:
     displayName: 'Run bandit' 
 
   - script: |
-      python3 setup.py bdist_wheel
-    displayName: 'artefact creation'
-
-  - script: |
       set PYTHONPATH=src
       pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
     displayName: 'pytest'
@@ -67,7 +63,7 @@ jobs:
   displayName: 'Copy and Publish'
   variables:
     Version.Major: 0
-    Version.Minor: 0
+    Version.Minor: 1
     Version.Revision: $[counter(variables['Version.Minor'], 0)]
   
   steps:
@@ -78,9 +74,16 @@ jobs:
 
   - task: PythonScript@0
     inputs:
-      scriptSource: 'filePath' # Options: filePath, inline
+      scriptSource: 'inline'
+      script: print("$(Version.Major).$(Version.Minor).$(Version.Revision)")
+    displayName: "Show version numbers"
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
       scriptPath: $(Build.SourcesDirectory)/altersetup.py 
-      arguments: $(Version.Major) $(Version.Minor) $(Version.Revision) 
+      arguments: $(Version.Major) $(Version.Minor) $(Version.Revision)
+    displayName: "Generate setup.py" 
     
   - script: |
       python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black

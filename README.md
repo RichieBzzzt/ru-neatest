@@ -14,11 +14,9 @@ Do not use: Currently in planning phase.
 ## to do:
 
  * Merge test case results and present a complete nunit result file.
- * auto increment setup.py
- * publish to testpypi.
+ * publish to testpypi 
  * Setup a test notebook project that makes use of runeatest.
  * How to setup a job to execute notebook with tests.
- * Branching and branch policies/PR not sorted on the build.
  * Sort out build number
 
 ## known unknowns
