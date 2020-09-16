@@ -2,7 +2,14 @@
 
 [![Build Status](https://dev.azure.com/sabinio/sabin.io%20public/_apis/build/status/RichieBzzzt.runeatest?branchName=master)](https://dev.azure.com/sabinio/sabin.io%20public/_build/latest?definitionId=250&branchName=master)
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+[![Coverage Status](https://coveralls.io/repos/github/RichieBzzzt/runeatest/badge.svg?branch=master)](https://coveralls.io/github/RichieBzzzt/runeatest?branch=master)
+
 nunit test report generator to run in DataBricks
+
+Add test case results to an object and at the end of testing. 
+Convert results to a string that looks like a Nunit results file and exit notebook with string.
 
 Do not use: Currently in planning phase.
 
@@ -18,3 +25,5 @@ Do not use: Currently in planning phase.
 
 ## known unknowns
  * How does this work with other types of jobs that can be run?
+
+
