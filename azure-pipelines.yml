@@ -40,10 +40,6 @@ jobs:
     displayName: 'Run bandit' 
 
   - script: |
-      python3 setup.py bdist_wheel
-    displayName: 'artefact creation'
-
-  - script: |
       set PYTHONPATH=src
       pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
     displayName: 'pytest'

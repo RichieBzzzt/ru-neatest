@@ -1,12 +1,15 @@
 from setuptools import setup, find_packages
 import os
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     # Application name:
     name="runeatest",
 
     # Version number:
-    version="0.0.1",
+    version="0.0.2",
 
     # Application author details:
     author="Sabin IO",
@@ -23,8 +26,7 @@ setup(
     url="https://github.com/RichieBzzzt/runeatest",
 
     description="nunit test report generator to run in DataBricks",
-    with open("README.md", "r") as fh:
-    long_description = fh.read()
+    long_description = long_description,
     keywords='azure, databricks, nunit',
 
      classifiers=[
