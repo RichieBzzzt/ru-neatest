@@ -7,7 +7,7 @@ from runeatest import testreporter
 
 
 def test_get_nunit_header(mocker):
-    x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
+    x = '{"tags": {"opId": "ServerBackend-f421e441fa310430","browserUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36","orgId": "1009391617598028","userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36","clusterId": "0216-124733-lone970","user": "eter.natus@galar.com","principalIdpObjectId": "71b45910-e7b4-44d8-82f7-bf6fac4630d0","browserHostName": "uksouth.azuredatabricks.net","parentOpId": "RPCClient-bb9b9591c29c01f7","jettyRpcType": "InternalDriverBackendMessages$DriverBackendRequest"},"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
     t = ("2020-9-13", "13:20:16")
     mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
@@ -15,7 +15,7 @@ def test_get_nunit_header(mocker):
     results = []
     results.append(testreporter.add_testcase("test name", False))
     results.append(testreporter.add_testcase("test name 2", True))
-    expected = '<test-results name="/Users/lorem.ipsum@fake.io/runeatest" total="2" date="2020-9-13" time="13:20:16">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="Microsoft Windows NT 6.1.7600.0" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="dummymachine" user="dummyuser" user-domain="dummy"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
+    expected = '<test-results name="/Users/lorem.ipsum@fake.io/runeatest" total="2" date="2020-9-13" time="13:20:16">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="uksouth.azuredatabricks.net" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="0216-124733-lone970" user="eter.natus@galar.com" user-domain="1009391617598028"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
     actual = nunit.get_nunit_header(results, context)
     assert expected == actual
 
@@ -146,7 +146,7 @@ def test_get_test_case_results_all_fail():
 
 
 def test_convert_to_nunit_results_format(mocker):
-    x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
+    x = '{"tags": {"opId": "ServerBackend-f421e441fa310430","browserUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36","orgId": "1009391617598028","userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36","clusterId": "0216-124733-lone970","user": "eter.natus@galar.com","principalIdpObjectId": "71b45910-e7b4-44d8-82f7-bf6fac4630d0","browserHostName": "uksouth.azuredatabricks.net","parentOpId": "RPCClient-bb9b9591c29c01f7","jettyRpcType": "InternalDriverBackendMessages$DriverBackendRequest"},"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
     mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     t = ("2020-9-13", "13:20:16")
@@ -154,6 +154,6 @@ def test_convert_to_nunit_results_format(mocker):
     results = []
     results.append(testreporter.add_testcase("test name", False))
     results.append(testreporter.add_testcase("test name 2", False))
-    expected = '<test-results name="/Users/lorem.ipsum@fake.io/runeatest" total="2" date="2020-9-13" time="13:20:16">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="Microsoft Windows NT 6.1.7600.0" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="dummymachine" user="dummyuser" user-domain="dummy"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>\n<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="0"><results>\n</results>\n</test-suite>\n</test-results>'
+    expected = '<test-results name="/Users/lorem.ipsum@fake.io/runeatest" total="2" date="2020-9-13" time="13:20:16">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="uksouth.azuredatabricks.net" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="0216-124733-lone970" user="eter.natus@galar.com" user-domain="1009391617598028"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>\n<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="0"><results>\n<test-case name="test name" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>\n<test-case name="test name 2" description="" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>\n</results>\n</test-suite>\n</test-results>'
     actual = nunit.convert_to_nunit_results_format(results)
     assert expected == actual
