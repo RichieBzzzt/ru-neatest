@@ -93,11 +93,8 @@ stages:
     - job: 'CopyAndPublish'
       dependsOn: 'BuildAndRunTests'
       displayName: 'Copy and Publish'
-      variables:
-        Version.Major: 0
-        Version.Minor: 27
-        Version.Revision: $[counter(variables['Version.Minor'], 0)]
-      
+      condition: and(succeeded(),ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+
       steps:
       - task: UsePythonVersion@0
         inputs:
