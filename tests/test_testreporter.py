@@ -8,8 +8,18 @@ def test_add_all_passed_test_cases():
     actual.append(testreporter.add_testcase("test name", True))
     actual.append(testreporter.add_testcase("test name 2", True))
     expected = [
-        {"test": "test name", "issuccess": "True", "result": "success"},
-        {"test": "test name 2", "issuccess": "True", "result": "success"},
+        {
+            "test": "test name",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "",
+        },
+        {
+            "test": "test name 2",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "",
+        },
     ]
     assert expected == actual
 
@@ -19,7 +29,14 @@ def test_add_passed_test_case():
 
     actual = []
     actual.append(testreporter.add_testcase("test name", True))
-    expected = [{"test": "test name", "issuccess": "True", "result": "success"}]
+    expected = [
+        {
+            "test": "test name",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "",
+        }
+    ]
     assert expected == actual
 
 
@@ -27,8 +44,17 @@ def test_add_failed_test_case():
     from runeatest import testreporter
 
     actual = []
-    actual.append(testreporter.add_testcase("test name", False))
-    expected = [{"test": "test name", "issuccess": "False", "result": "failure"}]
+    actual.append(
+        testreporter.add_testcase("test name", False, "actual isn't expected")
+    )
+    expected = [
+        {
+            "test": "test name",
+            "issuccess": "False",
+            "result": "failure",
+            "failurereason": "actual isn't expected",
+        }
+    ]
     assert expected == actual
 
 
@@ -37,14 +63,24 @@ def test_add_all_failed_test_cases():
 
     actual_test_add_all_failed_test_cases = []
     actual_test_add_all_failed_test_cases.append(
-        testreporter.add_testcase("test name", False)
+        testreporter.add_testcase("test name", False, "this test failed")
     )
     actual_test_add_all_failed_test_cases.append(
-        testreporter.add_testcase("test name 2", False)
+        testreporter.add_testcase("test name 2", False, "that test failed")
     )
     expected_test_add_all_failed_test_cases = [
-        {"test": "test name", "issuccess": "False", "result": "failure"},
-        {"test": "test name 2", "issuccess": "False", "result": "failure"},
+        {
+            "test": "test name",
+            "issuccess": "False",
+            "result": "failure",
+            "failurereason": "this test failed",
+        },
+        {
+            "test": "test name 2",
+            "issuccess": "False",
+            "result": "failure",
+            "failurereason": "that test failed",
+        },
     ]
     assert (
         expected_test_add_all_failed_test_cases == actual_test_add_all_failed_test_cases
@@ -56,10 +92,22 @@ def test_add_one_passed_one_failed_test_cases():
 
     actual = []
     actual.append(testreporter.add_testcase("test name", True))
-    actual.append(testreporter.add_testcase("test name 2", False))
+    actual.append(
+        testreporter.add_testcase("test name 2", False, "my test failed here")
+    )
     expected = [
-        {"test": "test name", "issuccess": "True", "result": "success"},
-        {"test": "test name 2", "issuccess": "False", "result": "failure"},
+        {
+            "test": "test name",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "",
+        },
+        {
+            "test": "test name 2",
+            "issuccess": "False",
+            "result": "failure",
+            "failurereason": "my test failed here",
+        },
     ]
     actual_string = str(actual)
     assert expected == actual
@@ -70,8 +118,8 @@ def test_add_one_passed_one_failed_test_cases_to_string():
 
     actual = []
     actual.append(testreporter.add_testcase("test name", True))
-    actual.append(testreporter.add_testcase("test name 2", False))
-    expected = "[{'test': 'test name', 'issuccess': 'True', 'result': 'success'}, {'test': 'test name 2', 'issuccess': 'False', 'result': 'failure'}]"
+    actual.append(testreporter.add_testcase("test name 2", False, "a failed test"))
+    expected = "[{'test': 'test name', 'issuccess': 'True', 'result': 'success', 'failurereason': ''}, {'test': 'test name 2', 'issuccess': 'False', 'result': 'failure', 'failurereason': 'a failed test'}]"
     actual_string = str(actual)
     assert expected == actual_string
 
@@ -81,12 +129,12 @@ def test_add_all_failed_test_cases_to_string():
 
     actual_test_add_all_failed_test_cases = []
     actual_test_add_all_failed_test_cases.append(
-        testreporter.add_testcase("test name", False)
+        testreporter.add_testcase("test name", False, "test name 1 has failed")
     )
     actual_test_add_all_failed_test_cases.append(
-        testreporter.add_testcase("test name 2", False)
+        testreporter.add_testcase("test name 2", False, "test name 2 has failed")
     )
-    expected_test_add_all_failed_test_cases_string = "[{'test': 'test name', 'issuccess': 'False', 'result': 'failure'}, {'test': 'test name 2', 'issuccess': 'False', 'result': 'failure'}]"
+    expected_test_add_all_failed_test_cases_string = "[{'test': 'test name', 'issuccess': 'False', 'result': 'failure', 'failurereason': 'test name 1 has failed'}, {'test': 'test name 2', 'issuccess': 'False', 'result': 'failure', 'failurereason': 'test name 2 has failed'}]"
     actual_test_add_all_failed_test_cases_string = str(
         actual_test_add_all_failed_test_cases
     )
@@ -94,3 +142,13 @@ def test_add_all_failed_test_cases_to_string():
         expected_test_add_all_failed_test_cases_string
         == actual_test_add_all_failed_test_cases_string
     )
+
+
+def test_add_passed_test_case():
+    from runeatest import testreporter
+
+    with pytest.raises(Exception):
+        actual = []
+        actual.append(
+            testreporter.add_testcase("test name", True, "this will raise exception")
+        )
