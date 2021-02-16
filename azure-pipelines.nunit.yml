@@ -20,6 +20,17 @@ stages:
           script: |
               $BuildName = $env:BUILD_DEFINITIONNAME +'_'+$env:VERSIONNUMBER +'_'+ $env:BUILD_SOURCEBRANCHNAME 
               Write-Host "##vso[build.updatebuildnumber]$BuildName"
+              steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.8'
+        displayName: 'Use Python 3.8'
+    
+      - script: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        displayName: 'Install dependencies'
+
 
       - script: |
           python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
