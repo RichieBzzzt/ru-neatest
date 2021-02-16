@@ -1,7 +1,7 @@
 import pytest
 import json
 from runeatest import nunit
-from runeatest import pyspark
+from runeatest import pysparkconnect
 from runeatest import utils
 from runeatest import testreporter
 
@@ -10,7 +10,7 @@ def test_get_nunit_header(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
     t = ("2020-9-13", "13:20:16")
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     mocker.patch("runeatest.utils.get_date_and_time", return_value=t)
     results = []
     results.append(testreporter.add_testcase("test name", False))
@@ -29,7 +29,7 @@ def test_get_nunit_footer():
 def test_get_test_suite_result_one_passed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", True))
     expected = '<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="success" success="True" time="0.000" asserts="0"><results>'
@@ -40,7 +40,7 @@ def test_get_test_suite_result_one_passed(mocker):
 def test_get_test_suite_result_one_failed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", False))
     expected = '<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="0"><results>'
@@ -51,7 +51,7 @@ def test_get_test_suite_result_one_failed(mocker):
 def test_get_test_suite_result_one_failed_one_passed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", False))
     results.append(testreporter.add_testcase("test name 2", True))
@@ -63,7 +63,7 @@ def test_get_test_suite_result_one_failed_one_passed(mocker):
 def test_get_test_suite_result_one_passed_one_failed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", False))
     results.append(testreporter.add_testcase("test name 2", True))
@@ -75,7 +75,7 @@ def test_get_test_suite_result_one_passed_one_failed(mocker):
 def test_get_test_suite_result_all_failed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", False))
     results.append(testreporter.add_testcase("test name 2", False))
@@ -87,7 +87,7 @@ def test_get_test_suite_result_all_failed(mocker):
 def test_get_test_suite_result_all_passed(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     results = []
     results.append(testreporter.add_testcase("test name", True))
     results.append(testreporter.add_testcase("test name 2", True))
@@ -148,7 +148,7 @@ def test_get_test_case_results_all_fail():
 def test_convert_to_nunit_results_format(mocker):
     x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
     context = json.loads(x)
-    mocker.patch("runeatest.pyspark.get_context", return_value=context)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
     t = ("2020-9-13", "13:20:16")
     mocker.patch("runeatest.utils.get_date_and_time", return_value=t)
     results = []
