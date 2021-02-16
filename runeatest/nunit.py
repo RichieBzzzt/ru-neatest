@@ -8,12 +8,16 @@ def get_nunit_header(results, context):
     print(now)
     now_date = now[0]
     now_time = now[1]
-    nunit_header = '<test-results name="##name##" total="##total##" date="##getdate##" time="##gettime##">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="Microsoft Windows NT 6.1.7600.0" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="dummymachine" user="dummyuser" user-domain="dummy"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
+    nunit_header = '<test-results name="##name##" total="##total##" date="##getdate##" time="##gettime##">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="##browserHostName##" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="##dummymachine##" user="##dummyuser##" user-domain="##orgid##"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
     nunit_header = (
         nunit_header.replace("##name##", context["extraContext"]["notebook_path"])
         .replace("##total##", total)
         .replace("##getdate##", now_date)
         .replace("##gettime##", now_time)
+        .replace("##dummymachine##", context["tags"]["clusterId"])
+        .replace("##dummyuser##", context["tags"]["user"])
+        .replace("##orgid##", context["tags"]["orgId"])
+        .replace("##browserHostName##", context["tags"]["browserHostName"])
     )
     return nunit_header
 
@@ -63,4 +67,4 @@ def convert_to_nunit_results_format(results):
     test_cases = get_test_case_results(results)
     footer = get_nunit_footer()
     str_test_cases = "\n".join(test_cases)
-    return header + "\n" + suite + "\n" + footer
+    return header + "\n" + suite + "\n" + str_test_cases + "\n" + footer
