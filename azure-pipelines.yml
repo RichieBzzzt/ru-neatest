@@ -93,7 +93,6 @@ stages:
     - job: 'CopyAndPublish'
       dependsOn: 'BuildAndRunTests'
       displayName: 'Copy and Publish'
-      condition: and(succeeded(),ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
       steps:
       - task: UsePythonVersion@0
