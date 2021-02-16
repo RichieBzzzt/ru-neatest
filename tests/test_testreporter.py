@@ -142,3 +142,13 @@ def test_add_all_failed_test_cases_to_string():
         expected_test_add_all_failed_test_cases_string
         == actual_test_add_all_failed_test_cases_string
     )
+
+
+def test_add_passed_test_case():
+    from runeatest import testreporter
+
+    with pytest.raises(Exception):
+        actual = []
+        actual.append(
+            testreporter.add_testcase("test name", True, "this will raise exception")
+        )
