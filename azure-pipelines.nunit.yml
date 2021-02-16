@@ -5,7 +5,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
-name: $(BuildDefinitionName)_$(VersionNumber)_$(SourceBranchName)
+name: $(BuildDefinitionName)_$(SourceBranchName)
 
 stages:
 - stage: BuildSetup
