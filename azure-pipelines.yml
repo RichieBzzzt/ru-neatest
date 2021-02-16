@@ -4,116 +4,149 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- master
-
-jobs:
-- job: 'BuildAndRunTests'
-  displayName: 'Build and Run Tests'
+  - master
   
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-      Python38:
-        python.version: '3.8'
+pool:
+  vmImage: 'ubuntu-18.04'
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-    displayName: 'Use Python $(python.version)'
+name: $(BuildDefinitionName)_$(VersionNumber)_$(SourceBranchName)
 
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-    displayName: 'Install dependencies'
+variables:
+  - name: "Version.Major"
+    value: "0"
+  - name: "Version.Minor"
+    value: "27"
+  - name: "Version.Revision"
+    value: $[counter(variables['Version.Minor'], 0)]
+  - name: VersionNumber 
+    value: $(Version.Major).$(Version.Minor).$(Version.Revision)
 
-  - script: |
-      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
-    displayName: 'Install Tools'
 
-  # https://bandit.readthedocs.io/en/latest/index.html
-  - script: |
-      python -m bandit -r . -c bandit-config.yml -f xml -o test-results-bandit.xml
-    displayName: 'Run bandit' 
+stages:
+- stage: BuildSetup
+  displayName: Setup Build 
+  jobs: 
+  - job:
+    steps:
+      - task: PowerShell@2
+        displayName: "Update Build Number"
+        inputs:
+          targetType: 'inline'
+          script: |
+              $BuildName = $env:BUILD_DEFINITIONNAME +'_'+$env:VERSIONNUMBER +'_'+ $env:BUILD_SOURCEBRANCHNAME 
+              Write-Host "##vso[build.updatebuildnumber]$BuildName"
 
-  - script: |
-      set PYTHONPATH=src
-      pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
-    displayName: 'pytest'
-
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage'
-    condition: succeededOrFailed() 
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results **/test-*.xml'
-    inputs:
-      testRunner: JUnit
-      testResultsFiles: '**/test-*.xml'
-      failTaskOnFailedTests: true
-
-- job: 'CopyAndPublish'
-  dependsOn: 'BuildAndRunTests'
-  displayName: 'Copy and Publish'
-  variables:
-    Version.Major: 0
-    Version.Minor: 27
-    Version.Revision: $[counter(variables['Version.Minor'], 0)]
-  
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.8'
-    displayName: 'Use Python 3.8'
-
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'inline'
-      script: print("$(Version.Major).$(Version.Minor).$(Version.Revision)")
-    displayName: "Show version numbers"
-
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: $(Build.SourcesDirectory)/altersetup.py 
-      arguments: $(Version.Major) $(Version.Minor) $(Version.Revision)
-    displayName: "Generate setup.py" 
+- stage: BuildRunTestsAndRelease
+  displayName: Pipeline
+  dependsOn: BuildSetup
+  jobs:
+    - job: 'BuildAndRunTests'
+      displayName: 'Build and Run Tests'      
+      strategy:
+        matrix:
+          Python36:
+            python.version: '3.6'
+          Python37:
+            python.version: '3.7'
+          Python38:
+            python.version: '3.8'
     
-  - script: |
-      python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
-    displayName: 'Install Tools'
-
-  - script: 
-      python3 -m black --check \runeatest \tests
-    displayName: 'Run black format checker'
-
-  - script: |
-      python3 setup.py bdist_wheel
-    displayName: 'Create artefact for pushing to PyPi'
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: dist
-      targetFolder: $(Build.ArtifactStagingDirectory)
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'dist'
-      publishLocation: 'Container'
-
-  - task: TwineAuthenticate@1
-    displayName: 'Twine Authenticate'
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    inputs:
-      pythonUploadServiceConnection: 'pypi_runeatest'
-  
-  - script: |
-      python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    displayName: "Upload to Pypi"
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+    
+      - script: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        displayName: 'Install dependencies'
+    
+      - script: |
+          python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
+        displayName: 'Install Tools'
+    
+      # https://bandit.readthedocs.io/en/latest/index.html
+      - script: |
+          python -m bandit -r . -c bandit-config.yml -f xml -o test-results-bandit.xml
+        displayName: 'Run bandit' 
+    
+      - script: |
+          set PYTHONPATH=src
+          pytest -v -x tests/*.py --junitxml=./TestResults/test-results.xml --cov=. --cov-report=xml --cov-report=html --cov-config=.coveragerc
+        displayName: 'pytest'
+    
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish code coverage'
+        condition: succeededOrFailed() 
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+    
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results **/test-*.xml'
+        inputs:
+          testRunner: JUnit
+          testResultsFiles: '**/test-*.xml'
+          failTaskOnFailedTests: true
+    
+    - job: 'CopyAndPublish'
+      dependsOn: 'BuildAndRunTests'
+      displayName: 'Copy and Publish'
+      variables:
+        Version.Major: 0
+        Version.Minor: 27
+        Version.Revision: $[counter(variables['Version.Minor'], 0)]
+      
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.8'
+        displayName: 'Use Python 3.8'
+    
+      - task: PythonScript@0
+        inputs:
+          scriptSource: 'inline'
+          script: print("$(Version.Major).$(Version.Minor).$(Version.Revision)")
+        displayName: "Show version numbers"
+    
+      - task: PythonScript@0
+        inputs:
+          scriptSource: 'filePath'
+          scriptPath: $(Build.SourcesDirectory)/altersetup.py 
+          arguments: $(Version.Major) $(Version.Minor) $(Version.Revision)
+        displayName: "Generate setup.py" 
+        
+      - script: |
+          python -m pip install --user --upgrade pip setuptools wheel twine bandit sphinx pytest pytest-mock pytest-cov black
+        displayName: 'Install Tools'
+    
+      - script: 
+          python3 -m black --check \runeatest \tests
+        displayName: 'Run black format checker'
+    
+      - script: |
+          python3 setup.py bdist_wheel
+        displayName: 'Create artefact for pushing to PyPi'
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: dist
+          targetFolder: $(Build.ArtifactStagingDirectory)
+    
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'dist'
+          publishLocation: 'Container'
+    
+      - task: TwineAuthenticate@1
+        displayName: 'Twine Authenticate'
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        inputs:
+          pythonUploadServiceConnection: 'pypi_runeatest'
+      
+      - script: |
+          python3 -m twine upload --skip-existing --verbose --repository runeatest  --config-file $(PYPIRC_PATH) dist/*.whl
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        displayName: "Upload to Pypi"
+    
