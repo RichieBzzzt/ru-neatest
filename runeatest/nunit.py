@@ -1,4 +1,4 @@
-from runeatest import pyspark
+from runeatest import pysparkconnect
 from runeatest import utils
 
 
@@ -57,7 +57,7 @@ def get_nunit_footer():
 
 
 def convert_to_nunit_results_format(results):
-    context = pyspark.get_context()
+    context = pysparkconnect.get_context()
     header = get_nunit_header(results, context)
     suite = get_test_suite_results(results, context)
     test_cases = get_test_case_results(results)
