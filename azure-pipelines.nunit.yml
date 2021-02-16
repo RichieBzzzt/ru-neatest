@@ -20,7 +20,6 @@ stages:
           script: |
               $BuildName = $env:BUILD_DEFINITIONNAME +'_'+$env:VERSIONNUMBER +'_'+ $env:BUILD_SOURCEBRANCHNAME 
               Write-Host "##vso[build.updatebuildnumber]$BuildName"
-              steps:
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '3.8'
