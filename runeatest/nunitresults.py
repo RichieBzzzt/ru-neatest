@@ -42,13 +42,14 @@ def get_test_case_results(results):
     test_cases = []
     for result in results:
         if result["result"] == "failure":
-            test_case_result = '<test-case name="##test##" description="" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1">\n<failure>\n</failure>\n</test-case>'
+            test_case_result = '<test-case name="##test##" description="" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1">\n<failure>##failure##\n</failure>\n</test-case>'
         elif result["result"] == "success":
             test_case_result = '<test-case name="##test##" description="" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1"/>'
         test_case_result = (
             test_case_result.replace("##test##", result["test"])
             .replace("##result##", result["result"])
             .replace("##issuccess##", result["issuccess"])
+            .replace("##failure##", result["failurereason"])
         )
         test_cases.append(test_case_result)
     print(test_cases)
