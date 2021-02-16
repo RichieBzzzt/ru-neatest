@@ -41,9 +41,9 @@ stages:
         displayName: 'pytest'
   
       - task: PublishTestResults@2
-        displayName: 'Publish Test Results **/_nunit_test_results.xml'
+        displayName: 'Publish Test Results **/*_nunit_test_results.xml'
         inputs:
           testRunner: NUnit
-          testResultsFiles: '**/_nunit_test_results.xml'
+          testResultsFiles: '**/*_nunit_test_results.xml'
           failTaskOnFailedTests: true
     
