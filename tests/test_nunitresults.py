@@ -96,6 +96,30 @@ def test_get_test_suite_result_all_passed(mocker):
     assert expected == actual
 
 
+def test_get_test_suite_result_all_passed(mocker):
+    x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
+    context = json.loads(x)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
+    results = []
+    results.append(
+        testreporter.add_testcase(
+            "test name",
+            True,
+            "test may also have failed but because it did not this is not included in output",
+        )
+    )
+    results.append(
+        testreporter.add_testcase(
+            "test name 2",
+            True,
+            "test may have failed but because it did not this is not included in output",
+        )
+    )
+    expected = '<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="success" success="True" time="0.000" asserts="0"><results>'
+    actual = nunitresults.get_test_suite_results(results, context)
+    assert expected == actual
+
+
 def test_get_test_case_results_one_failure():
     results = []
     results.append(testreporter.add_testcase("test name", False, "oh dear"))

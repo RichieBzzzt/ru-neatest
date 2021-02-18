@@ -144,11 +144,32 @@ def test_add_all_failed_test_cases_to_string():
     )
 
 
-def test_add_passed_test_case():
+def test_add_all_passed_test_cases_failure_included():
     from runeatest import testreporter
 
-    with pytest.raises(Exception):
-        actual = []
-        actual.append(
-            testreporter.add_testcase("test name", True, "this will raise exception")
+    actual = []
+    actual.append(
+        testreporter.add_testcase(
+            "test name", True, "my test may have failed because of something"
         )
+    )
+    actual.append(
+        testreporter.add_testcase(
+            "test name 2", True, "my test may have failed because of something else"
+        )
+    )
+    expected = [
+        {
+            "test": "test name",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "my test may have failed because of something",
+        },
+        {
+            "test": "test name 2",
+            "issuccess": "True",
+            "result": "success",
+            "failurereason": "my test may have failed because of something else",
+        },
+    ]
+    assert expected == actual
