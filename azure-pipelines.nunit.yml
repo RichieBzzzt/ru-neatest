@@ -45,5 +45,5 @@ stages:
         inputs:
           testRunner: NUnit
           testResultsFiles: '**/*_nunit_test_results.xml'
-          failTaskOnFailedTests: true
+          failTaskOnFailedTests: false
     
