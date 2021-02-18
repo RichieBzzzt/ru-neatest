@@ -201,12 +201,12 @@ def test_get_test_case_results_all_fail(mocker):
     results = []
     results.append(
         testreporter.add_testcase(
-            "test name", "this description describes the test", False, "why"
+            "test name", False, "this description describes the test", "why"
         )
     )
     results.append(
         testreporter.add_testcase(
-            "test name 2", "this description describes the test", False, "why oh why"
+            "test name 2", False, "this description describes the test", "why oh why"
         )
     )
     expected0 = '<test-case name="test name" description="this description describes the test" classname="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure><message>why\n</message></failure>\n</test-case>'
@@ -242,3 +242,29 @@ def test_convert_to_nunit_results_format(mocker):
     expected = '<test-results name="/Users/lorem.ipsum@fake.io/runeatest" total="2" date="2020-9-13" time="13:20:16">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="uksouth.azuredatabricks.net" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="0216-124733-lone970" user="eter.natus@galar.com" user-domain="1009391617598028"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>\n<test-suite type="TestFixture" name="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="0"><results>\n<test-case name="test name" description="this description describes the test" classname="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure><message>this test has failed\n</message></failure>\n</test-case>\n<test-case name="test name 2" description="this description describes the test" classname="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="failure" success="False" time="0.000" asserts="1">\n<failure><message>this test has also failed\n</message></failure>\n</test-case>\n</results>\n</test-suite>\n</test-results>'
     actual = nunitresults.convert_to_nunit_results_format(results)
     assert expected == actual
+
+
+def test_get_test_case_results_all_pass_different_notebookpaths(mocker):
+    x = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/runeatest"}}'
+    context = json.loads(x)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
+    results = []
+    results.append(
+        testreporter.add_testcase(
+            "test name", True, "this description describes the test"
+        )
+    )
+    y = '{"extraContext":{"notebook_path":"/Users/lorem.ipsum@fake.io/eternatus"}}'
+    context = json.loads(y)
+    mocker.patch("runeatest.pysparkconnect.get_context", return_value=context)
+
+    results.append(
+        testreporter.add_testcase(
+            "test name 2", True, "this description describes the test"
+        )
+    )
+    expected0 = '<test-case name="test name" description="this description describes the test" classname="/Users/lorem.ipsum@fake.io/runeatest" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    expected1 = '<test-case name="test name 2" description="this description describes the test" classname="/Users/lorem.ipsum@fake.io/eternatus" executed="True" result="success" success="True" time="0.000" asserts="1"/>'
+    actual = nunitresults.get_test_case_results(results)
+    assert expected0 == actual[0]
+    assert expected1 == actual[1]
