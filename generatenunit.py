@@ -48,7 +48,8 @@ def test_convert_to_nunit_results_format_multiple_results(mocker):
     results2.append(testreporter.add_testcase("test name 4", True))
 
     actual = nunitresults.convert_to_nunit_results_format(results)
-    actual2 = nunitresults.convert_to_nunit_results_format(results2)
+    actual += nunitresults.convert_to_nunit_results_format(results2)
+
     now = datetime.now()
     now_date = str(now.year) + str(now.month) + str(now.day)
     now_time = (
@@ -63,5 +64,4 @@ def test_convert_to_nunit_results_format_multiple_results(mocker):
     )
     f = open(fname, "w")
     f.write(actual)
-    f.write(actual2)
     f.close()
