@@ -23,16 +23,16 @@ def test_add_all_passed_test_cases(mocker):
         {
             "test": "test name",
             "issuccess": "True",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "",
         },
         {
             "test": "test name 2",
             "issuccess": "True",
-            "description": "this test also will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test also will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "",
         },
@@ -55,8 +55,8 @@ def test_add_passed_test_case(mocker):
         {
             "test": "test name",
             "issuccess": "True",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "",
         }
@@ -82,8 +82,8 @@ def test_add_failed_test_case(mocker):
         {
             "test": "test name",
             "issuccess": "False",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "failure",
             "failurereason": "actual isn't expected",
         }
@@ -117,16 +117,16 @@ def test_add_all_failed_test_cases(mocker):
         {
             "test": "test name",
             "issuccess": "False",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "failure",
             "failurereason": "this test failed",
         },
         {
             "test": "test name 2",
             "issuccess": "False",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "failure",
             "failurereason": "that test failed",
         },
@@ -159,16 +159,16 @@ def test_add_one_passed_one_failed_test_cases(mocker):
         {
             "test": "test name",
             "issuccess": "True",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "",
         },
         {
             "test": "test name 2",
             "issuccess": "False",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "failure",
             "failurereason": "my test failed here",
         },
@@ -196,7 +196,7 @@ def test_add_one_passed_one_failed_test_cases_to_string(mocker):
             "a failed test",
         )
     )
-    expected = "[{'test': 'test name', 'issuccess': 'True', 'description': 'this test will check that something will work', 'classname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'success', 'failurereason': ''}, {'test': 'test name 2', 'issuccess': 'False', 'description': 'this test will check that something will work', 'classname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'a failed test'}]"
+    expected = "[{'test': 'test name', 'issuccess': 'True', 'label': 'this test will check that something will work', 'fullname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'success', 'failurereason': ''}, {'test': 'test name 2', 'issuccess': 'False', 'label': 'this test will check that something will work', 'fullname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'a failed test'}]"
     actual_string = str(actual)
     assert expected == actual_string
 
@@ -223,7 +223,7 @@ def test_add_all_failed_test_cases_to_string(mocker):
             "test name 2 has failed",
         )
     )
-    expected_test_add_all_failed_test_cases_string = "[{'test': 'test name', 'issuccess': 'False', 'description': 'this test will check that something will work', 'classname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'test name 1 has failed'}, {'test': 'test name 2', 'issuccess': 'False', 'description': 'this test will check that something will work', 'classname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'test name 2 has failed'}]"
+    expected_test_add_all_failed_test_cases_string = "[{'test': 'test name', 'issuccess': 'False', 'label': 'this test will check that something will work', 'fullname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'test name 1 has failed'}, {'test': 'test name 2', 'issuccess': 'False', 'label': 'this test will check that something will work', 'fullname': '/Users/lorem.ipsum@fake.io/runeatest', 'result': 'failure', 'failurereason': 'test name 2 has failed'}]"
     actual_test_add_all_failed_test_cases_string = str(
         actual_test_add_all_failed_test_cases
     )
@@ -259,16 +259,16 @@ def test_add_all_passed_test_cases_failure_included(mocker):
         {
             "test": "test name",
             "issuccess": "True",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "my test may have failed because of something",
         },
         {
             "test": "test name 2",
             "issuccess": "True",
-            "description": "this test will check that something will work",
-            "classname": "/Users/lorem.ipsum@fake.io/runeatest",
+            "label": "this test will check that something will work",
+            "fullname": "/Users/lorem.ipsum@fake.io/runeatest",
             "result": "success",
             "failurereason": "my test may have failed because of something else",
         },

@@ -8,16 +8,16 @@ def get_nunit_header(results, context):
     print(now)
     now_date = now[0]
     now_time = now[1]
-    nunit_header = '<test-results name="##name##" total="##total##" date="##getdate##" time="##gettime##">\n<environment nunit-version="2.6.0.12035" clr-version="2.0.50727.4963" os-version="##browserHostName##" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="##dummymachine##" user="##dummyuser##" user-domain="##orgid##"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
+    nunit_header = '<test-results name="##name##" total="##total##" date="##getdate##" time="##gettime##">\n<environment nunit-version="3.13.0" clr-version="2.0.50727.4963" os-version="##browserHostName##" platform="Win32NT" cwd="C:\\Program Files\\NUnit 2.6\\bin\\" machine-name="##dummymachine##" user="##dummyuser##" user-domain="##orgid##"/>\n<culture-info current-culture="en-US" current-uiculture="en-US"/>'
     nunit_header = (
         nunit_header.replace("##name##", context["extraContext"]["notebook_path"])
         .replace("##total##", total)
         .replace("##getdate##", now_date)
         .replace("##gettime##", now_time)
-        .replace("##dummymachine##", context["tags"]["clusterId"])
+        .replace("##dummymachine##", context["tags"]["browserHostName"])
         .replace("##dummyuser##", context["tags"]["user"])
         .replace("##orgid##", context["tags"]["orgId"])
-        .replace("##browserHostName##", context["tags"]["browserHostName"])
+        .replace("##browserHostName##", context["tags"]["clusterId"])
     )
     return nunit_header
 
@@ -42,14 +42,14 @@ def get_test_case_results(results):
     test_cases = []
     for result in results:
         if result["result"] == "failure":
-            test_case_result = '<test-case name="##test##" description="##description##" classname="##classname##" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1">\n<failure><message>##failure##\n</message></failure>\n</test-case>'
+            test_case_result = '<test-case name="##test##" label="##label##" fullname="##fullname##" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1">\n<failure><message>##failure##\n</message></failure>\n</test-case>'
         elif result["result"] == "success":
-            test_case_result = '<test-case name="##test##" description="##description##" classname="##classname##" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1"/>'
+            test_case_result = '<test-case name="##test##" label="##label##" fullname="##fullname##" executed="True" result="##result##" success="##issuccess##" time="0.000" asserts="1"/>'
         test_case_result = (
             test_case_result.replace("##test##", result["test"])
             .replace("##result##", result["result"])
-            .replace("##description##", result["description"])
-            .replace("##classname##", result["classname"])
+            .replace("##label##", result["label"])
+            .replace("##fullname##", result["fullname"])
             .replace("##issuccess##", result["issuccess"])
             .replace("##failure##", result["failurereason"])
         )
