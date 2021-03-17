@@ -1,7 +1,11 @@
-
 trigger:
-  - none
+  - master
   
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - master
 pool:
   vmImage: 'ubuntu-18.04'
 
